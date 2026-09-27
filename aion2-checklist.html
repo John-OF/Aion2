@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aion 2 · Registro del Daeva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Alegreya+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c1322; --bg2:#121c31; --panel:#141f36; --line:#2a3a5c;
+  --text:#e9e3d3; --muted:#9aa6bf;
+  --gold:#d8b46a; --gold-dim:#8a7040;
+  --elyos:#74bde9; --asmo:#c9485f; --alts:#a98be0;
+  --check-bg:#0a101d;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#efe7d6; --bg2:#e6dcc6; --panel:#fbf7ee; --line:#cdbf9f;
+    --text:#2a2418; --muted:#6d6450;
+    --gold:#9a7428; --gold-dim:#c7a868;
+    --elyos:#2b7fb5; --asmo:#b0324a; --alts:#6b4fb0;
+    --check-bg:#fffdf8;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#efe7d6; --bg2:#e6dcc6; --panel:#fbf7ee; --line:#cdbf9f;
+  --text:#2a2418; --muted:#6d6450;
+  --gold:#9a7428; --gold-dim:#c7a868;
+  --elyos:#2b7fb5; --asmo:#b0324a; --alts:#6b4fb0; --check-bg:#fffdf8;
+}
+:root[data-theme="dark"]{
+  --bg:#0c1322; --bg2:#121c31; --panel:#141f36; --line:#2a3a5c;
+  --text:#e9e3d3; --muted:#9aa6bf;
+  --gold:#d8b46a; --gold-dim:#8a7040;
+  --elyos:#74bde9; --asmo:#c9485f; --alts:#a98be0; --check-bg:#0a101d;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0; min-height:100vh;
+  background:
+    radial-gradient(1200px 600px at 85% -10%, color-mix(in srgb,var(--elyos) 14%,transparent), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, color-mix(in srgb,var(--asmo) 12%,transparent), transparent 60%),
+    var(--bg);
+  color:var(--text);
+  font:17px/1.5 "Alegreya Sans", "Segoe UI", system-ui, sans-serif;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+
+/* Header */
+header{
+  display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center;
+  border-bottom:1px solid var(--line); padding-bottom:22px; margin-bottom:28px;
+}
+h1{
+  font-family:"Cinzel", Georgia, serif; font-weight:700;
+  font-size:clamp(28px,4.4vw,46px); line-height:1.05; margin:0;
+  letter-spacing:.02em; color:var(--gold);
+}
+h1 small{display:block;font-size:.42em;color:var(--muted);font-weight:500;letter-spacing:.06em;margin-top:8px}
+.sub{color:var(--muted);margin:10px 0 0;max-width:52ch}
+
+/* Reset seal */
+.seal-box{display:flex;flex-direction:column;align-items:center;gap:8px}
+.seal{
+  position:relative; width:148px; height:148px; border-radius:50%;
+  border:none; padding:0; cursor:pointer; background:transparent; color:var(--gold);
+  font-family:"Cinzel",Georgia,serif;
+}
+.seal svg{position:absolute;inset:0;width:100%;height:100%}
+.seal .ring{transform-origin:50% 50%; animation:spin 60s linear infinite}
+.seal:hover .ring{animation-duration:12s}
+.seal .core{
+  position:absolute; inset:34px; border-radius:50%;
+  display:grid; place-items:center;
+  background:radial-gradient(circle at 50% 40%, color-mix(in srgb,var(--gold) 22%,var(--panel)), var(--panel));
+  border:1px solid var(--gold-dim);
+  font-size:19px; font-weight:700; letter-spacing:.08em;
+  transition:background .2s, color .2s;
+}
+.seal.armed .core{background:radial-gradient(circle, color-mix(in srgb,var(--asmo) 45%,var(--panel)), var(--panel)); color:#fff; font-size:14px; line-height:1.15; text-align:center}
+.seal.armed .ring{animation-duration:3s; color:var(--asmo)}
+.seal.flash .core{animation:flash .7s ease}
+.seal:focus-visible{outline:2px solid var(--elyos);outline-offset:4px}
+.seal-hint{font-size:14px;color:var(--muted);text-align:center;max-width:18ch}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes flash{0%{box-shadow:0 0 0 0 var(--gold)}100%{box-shadow:0 0 0 30px transparent}}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px;align-items:start}
+.card{
+  background:var(--panel); border:1px solid var(--line); border-radius:6px;
+  border-top:3px solid var(--accent); overflow:hidden;
+}
+.card.wide{grid-column:1/-1}
+.card-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  padding:14px 18px 10px;
+}
+h2{font-family:"Cinzel",Georgia,serif;font-weight:700;font-size:20px;margin:0;color:var(--accent);letter-spacing:.03em}
+.meta{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted);white-space:nowrap}
+.count{font-variant-numeric:tabular-nums;color:var(--text);font-weight:700}
+.mini{
+  background:none;border:1px solid var(--line);color:var(--muted);border-radius:4px;
+  font:inherit;font-size:13px;padding:2px 8px;cursor:pointer;
+}
+.mini:hover{color:var(--text);border-color:var(--accent)}
+.mini:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.bar{height:3px;background:var(--bg2);margin:0 18px 6px;border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+
+ul{list-style:none;margin:0;padding:0 8px 10px}
+li label{
+  display:flex; align-items:center; gap:12px; padding:9px 10px; border-radius:4px;
+  cursor:pointer; user-select:none;
+}
+li label:hover{background:var(--bg2)}
+li input:checked + .box + .txt{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--gold-dim)}
+
+/* Checkbox as crystal */
+input[type=checkbox]{position:absolute;opacity:0;width:1px;height:1px}
+.box{
+  flex:none; width:22px; height:22px; transform:rotate(45deg) scale(.82);
+  border:1.5px solid var(--gold-dim); background:var(--check-bg); border-radius:3px;
+  display:grid; place-items:center; transition:background .15s,border-color .15s;
+}
+.box::after{
+  content:""; width:8px; height:8px; background:var(--bg); border-radius:1px;
+  transform:scale(0); transition:transform .15s;
+}
+input:checked + .box{background:var(--accent);border-color:var(--accent)}
+input:checked + .box::after{transform:scale(1)}
+input:focus-visible + .box{outline:2px solid var(--elyos);outline-offset:3px}
+
+/* Alts table */
+.scroll{overflow-x:auto;padding:0 8px 12px}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{padding:8px 6px;text-align:center;border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+th{font-family:"Cinzel",Georgia,serif;font-size:14px;font-weight:500;color:var(--muted)}
+th.done{color:var(--accent)}
+td:first-child,th:first-child{text-align:left;padding-left:10px}
+td:first-child{min-width:220px}
+tbody tr:hover{background:var(--bg2)}
+td label{display:inline-grid;place-items:center;padding:6px;cursor:pointer}
+tfoot td{font-size:13px;color:var(--muted);border-bottom:none;font-variant-numeric:tabular-nums}
+
+footer{margin-top:28px;color:var(--muted);font-size:14px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+#sync{min-height:1em}
+
+@media (max-width:620px){
+  header{grid-template-columns:1fr}
+  .seal-box{flex-direction:row;justify-content:flex-start}
+  .seal{width:112px;height:112px}
+  .seal .core{inset:26px;font-size:16px}
+  .seal-hint{text-align:left}
+}
+@media (prefers-reduced-motion:reduce){
+  .seal .ring{animation:none}
+  *{transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Registro del Daeva<small>Aion 2 · Main + 7 alts</small></h1>
+      <p class="sub">Marca lo que ya hiciste hoy y esta semana. Tus marcas se guardan solas; el sello las borra todas.</p>
+    </div>
+    <div class="seal-box">
+      <button class="seal" id="reset" aria-label="Reset: desmarcar todas las casillas">
+        <svg viewBox="0 0 148 148" aria-hidden="true">
+          <g class="ring" fill="none" stroke="currentColor">
+            <circle cx="74" cy="74" r="70" stroke-width="1" opacity=".6"/>
+            <circle cx="74" cy="74" r="62" stroke-width="1.5" stroke-dasharray="2 6"/>
+            <circle cx="74" cy="74" r="54" stroke-width="1" opacity=".5"/>
+            <g stroke-width="1.5">
+              <path d="M74 4 l6 10 h-12z"/><path d="M74 144 l6 -10 h-12z"/>
+              <path d="M4 74 l10 6 v-12z"/><path d="M144 74 l-10 6 v-12z"/>
+            </g>
+            <g stroke-width="1" opacity=".8">
+              <path d="M24.5 24.5 l8 3 -3 -8z"/><path d="M123.5 24.5 l-8 3 3 -8z"/>
+              <path d="M24.5 123.5 l8 -3 -3 8z"/><path d="M123.5 123.5 l-8 -3 3 8z"/>
+            </g>
+          </g>
+        </svg>
+        <span class="core" id="resetLabel">Reset</span>
+      </button>
+      <span class="seal-hint" id="resetHint">Toca dos veces para confirmar</span>
+    </div>
+  </header>
+
+  <main class="grid" id="grid"></main>
+
+  <footer>
+    <span id="sync"></span>
+    <button class="mini" id="theme" aria-label="Cambiar tema claro u oscuro">Cambiar tema</button>
+  </footer>
+</div>
+
+<script>
+const SECTIONS = [
+  { id:"diario", title:"Contenido diario", accent:"var(--gold)", items:[
+    "5 Dutys (misiones diarias)",
+    "1 millón de Kina farmeable",
+    "Black Cloud Merchant (mercado negro)"
+  ]},
+  { id:"pve", title:"Semanal PvE", accent:"var(--elyos)", items:[
+    "Gastar la energía",
+    "Shugo · 14 entradas",
+    "Boss diario · 7 entradas",
+    "12 misiones de comando",
+    "14 Daily Dungeons",
+    "14 Nightmare",
+    "3 Ascension Trial",
+    "Misiones de temporada semanal"
+  ]},
+  { id:"pvp", title:"Semanal PvP", accent:"var(--asmo)", items:[
+    "20 misiones de comando en el Abyss",
+    "Corredores de 0-6 (ver cada 72 horas)",
+    "Farm de Abyss Points semanales",
+    "Participar 10 veces en arenas",
+    "30 victorias en arena",
+    "Participar 3 veces en 10 vs 10",
+    "3 victorias en modo 10 vs 10",
+    "Suministros por Abyss Points"
+  ]}
+];
+const ALTS = { id:"alts", title:"Contenido repetido con alts", accent:"var(--alts)", cols:7, items:[
+  "Gastar la energía",
+  "1 millón de Kina farmeable",
+  "3 Ascension Trial",
+  "14 Nightmare",
+  "Misiones de temporada semanal",
+  "Corredores de 0-6 (ver cada 72 horas)",
+  "Suministros por Abyss Points"
+]};
+
+const LS_KEY = "aion2-checklist-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(LS_KEY) || "{}") || {}; } catch(e){ state = {}; }
+
+const grid = document.getElementById("grid");
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function box(key, label){
+  return `<input type="checkbox" data-key="${key}" id="${key}" aria-label="${esc(label)}"><span class="box" aria-hidden="true"></span>`;
+}
+function head(s, total){
+  return `<div class="card-head"><h2>${s.title}</h2>
+    <span class="meta"><span><span class="count" data-count="${s.id}">0</span> / ${total}</span>
+    <button class="mini" data-reset="${s.id}">Reiniciar</button></span></div>
+    <div class="bar"><i data-bar="${s.id}"></i></div>`;
+}
+
+let html = "";
+for (const s of SECTIONS){
+  html += `<section class="card" style="--accent:${s.accent}" data-sec="${s.id}">${head(s, s.items.length)}<ul>`;
+  s.items.forEach((it,i)=>{
+    const k = `${s.id}-${i}`;
+    html += `<li><label>${box(k,it)}<span class="txt">${esc(it)}</span></label></li>`;
+  });
+  html += `</ul></section>`;
+}
+{
+  const s = ALTS;
+  html += `<section class="card wide" style="--accent:${s.accent}" data-sec="${s.id}">${head(s, s.items.length*s.cols)}
+    <div class="scroll"><table><thead><tr><th scope="col">Actividad</th>`;
+  for (let c=1;c<=s.cols;c++) html += `<th scope="col" data-colhead="${c}">Alt ${c}</th>`;
+  html += `</tr></thead><tbody>`;
+  s.items.forEach((it,i)=>{
+    html += `<tr><td>${esc(it)}</td>`;
+    for (let c=1;c<=s.cols;c++){
+      const k = `alts-${i}-${c}`;
+      html += `<td><label>${box(k, it+" · Alt "+c)}</label></td>`;
+    }
+    html += `</tr>`;
+  });
+  html += `</tbody><tfoot><tr><td>Completado</td>`;
+  for (let c=1;c<=s.cols;c++) html += `<td data-colcount="${c}">0/${s.items.length}</td>`;
+  html += `</tr></tfoot></table></div></section>`;
+}
+grid.innerHTML = html;
+
+const allBoxes = [...document.querySelectorAll("input[data-key]")];
+
+function render(){
+  allBoxes.forEach(b => b.checked = !!state[b.dataset.key]);
+  const secs = [...SECTIONS, ALTS];
+  for (const s of secs){
+    const boxes = allBoxes.filter(b => b.dataset.key.startsWith(s.id+"-"));
+    const n = boxes.filter(b=>b.checked).length;
+    document.querySelector(`[data-count="${s.id}"]`).textContent = n;
+    document.querySelector(`[data-bar="${s.id}"]`).style.width = (boxes.length ? n/boxes.length*100 : 0)+"%";
+  }
+  for (let c=1;c<=ALTS.cols;c++){
+    let n=0; for (let i=0;i<ALTS.items.length;i++) if (state[`alts-${i}-${c}`]) n++;
+    document.querySelector(`[data-colcount="${c}"]`).textContent = `${n}/${ALTS.items.length}`;
+    document.querySelector(`[data-colhead="${c}"]`).classList.toggle("done", n===ALTS.items.length);
+  }
+}
+
+/* ---- Persistence: localStorage now, cloud sync if available ---- */
+let dbDoc = null, saveTimer = null;
+const syncEl = document.getElementById("sync");
+
+function persist(){
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e){}
+  if (dbDoc){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(async ()=>{
+      try { await dbDoc.set({checks: state, updated: Date.now()}); syncEl.textContent = "Guardado en tu cuenta"; }
+      catch(e){ syncEl.textContent = "Guardado solo en este navegador"; }
+    }, 600);
+  }
+}
+
+(async function initSync(){
+  try{
+    if (!window.claude || !window.claude.use) return;
+    const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+    if (!db || !user) return;
+    const uid = await user.id();
+    if (!uid) return;
+    dbDoc = db.doc(`data/users/${uid}/checklist`);
+    const snap = await dbDoc.get();
+    if (snap.exists){
+      const d = snap.data();
+      if (d && d.checks && typeof d.checks === "object"){ state = {...d.checks}; render(); try{localStorage.setItem(LS_KEY, JSON.stringify(state));}catch(e){} }
+    }
+    syncEl.textContent = "Sincronizado con tu cuenta";
+  }catch(e){ dbDoc = null; }
+})();
+
+grid.addEventListener("change", e=>{
+  const b = e.target.closest("input[data-key]"); if (!b) return;
+  if (b.checked) state[b.dataset.key] = true; else delete state[b.dataset.key];
+  render(); persist();
+});
+grid.addEventListener("click", e=>{
+  const btn = e.target.closest("[data-reset]"); if (!btn) return;
+  const id = btn.dataset.reset;
+  Object.keys(state).forEach(k => { if (k.startsWith(id+"-")) delete state[k]; });
+  render(); persist();
+});
+
+/* ---- Reset seal with two-tap confirmation ---- */
+const seal = document.getElementById("reset"), label = document.getElementById("resetLabel"), hint = document.getElementById("resetHint");
+let armTimer = null;
+seal.addEventListener("click", ()=>{
+  if (!seal.classList.contains("armed")){
+    seal.classList.add("armed"); label.innerHTML = "¿Borrar<br>todo?"; hint.textContent = "Toca otra vez";
+    armTimer = setTimeout(disarm, 3000);
+    return;
+  }
+  clearTimeout(armTimer); disarm();
+  state = {}; render(); persist();
+  seal.classList.remove("flash"); void seal.offsetWidth; seal.classList.add("flash");
+  hint.textContent = "Casillas desmarcadas";
+  setTimeout(()=>{ hint.textContent = "Toca dos veces para confirmar"; }, 2200);
+});
+function disarm(){ seal.classList.remove("armed"); label.textContent = "Reset"; if (hint.textContent==="Toca otra vez") hint.textContent = "Toca dos veces para confirmar"; }
+
+/* ---- Theme toggle ---- */
+const root = document.documentElement;
+try { const t = localStorage.getItem("aion2-theme"); if (t) root.dataset.theme = t; } catch(e){}
+document.getElementById("theme").addEventListener("click", ()=>{
+  const dark = root.dataset.theme ? root.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("aion2-theme", root.dataset.theme); } catch(e){}
+});
+
+render();
+</script>
+</body>
+</html>
