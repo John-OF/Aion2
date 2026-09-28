@@ -239,6 +239,45 @@ footer{background:var(--lowest);margin-top:8px}
 .foot-note a{color:var(--gold);text-decoration:none}
 .foot-note a:hover{text-decoration:underline}
 
+/* ---------- Backup ---------- */
+.ghost{
+  display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:6px 12px;cursor:pointer;
+  background:none;border:0;color:var(--muted);font:600 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+  position:relative;transition:color .2s;
+}
+.ghost::before,.ghost::after{content:"";position:absolute;top:2px;bottom:2px;width:5px;border:1px solid var(--gold);opacity:.6}
+.ghost::before{left:0;border-right:0} .ghost::after{right:0;border-left:0}
+.ghost:hover{color:#e5c158}
+.ghost svg{width:16px;height:16px;color:var(--gold)}
+dialog{
+  width:min(520px,calc(100vw - 32px));padding:26px;border:1px solid rgba(223,168,55,.35);border-radius:var(--r);
+  background:rgba(22,26,51,.97);color:var(--text);box-shadow:0 16px 48px rgba(0,0,0,.85),0 0 24px rgba(223,168,55,.18);
+}
+dialog::backdrop{background:rgba(5,6,12,.7);backdrop-filter:blur(3px)}
+dialog h2{--acc:var(--gold);font-size:24px;margin:0 32px 6px 0}
+.dlg-close{position:absolute;top:14px;right:14px;margin:0}
+.dlg-close button{width:32px;height:32px;border:0;border-radius:8px;background:none;color:var(--muted);cursor:pointer;font-size:16px}
+.dlg-close button:hover{background:var(--high);color:var(--text)}
+.dlg-intro{color:var(--muted);margin:0 0 18px}
+.dlg-block{display:grid;gap:8px;padding:16px 0;border-top:1px solid rgba(255,255,255,.06)}
+.dlg-block .label{color:var(--gold)}
+.code-row{display:flex;gap:8px}
+.code{
+  flex:1;min-width:0;padding:10px 12px;border-radius:8px;border:0;border-bottom:1px solid #343b59;
+  background:rgba(8,10,18,.85);color:#f4f6fd;font:600 15px/1.3 var(--mono);letter-spacing:.06em;
+  overflow-wrap:anywhere;user-select:all;
+}
+input.code:focus{outline:none;border-bottom-color:var(--gold-2);box-shadow:0 2px 12px -4px rgba(223,168,55,.5)}
+.btn-gold,.btn-void{
+  flex:none;padding:0 16px;border-radius:8px;cursor:pointer;font:700 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+}
+.btn-gold{border:1px solid #ffe699;background:linear-gradient(180deg,#dfa837,#b88219);color:#0a0c16}
+.btn-gold:hover{box-shadow:0 0 18px rgba(223,168,55,.6)}
+.btn-void{border:1px solid var(--void-2);background:rgba(122,59,245,.12);color:#f4f6fd}
+.btn-void:hover{background:rgba(122,59,245,.25)}
+.dlg-hint{margin:0;font-size:12px;color:var(--faint)}
+.dlg-hint.ok{color:#4ef29f} .dlg-hint.err{color:#ffb4ab}
+
 /* ---------- Ko-fi ---------- */
 .kofi{
   display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;border-radius:10px;
@@ -330,6 +369,10 @@ footer{background:var(--lowest);margin-top:8px}
         <span class="a">Aion 2</span><span>◊</span><span class="g">Main</span><span>+</span><span class="v" data-i18n="altsCount"></span>
       </div>
       <p class="hero-desc" data-i18n="sub"></p>
+      <button class="ghost" id="backupOpen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6z"/><path d="M9 12l2 2 4-4"/></svg>
+        <span data-i18n="backupBtn"></span>
+      </button>
     </div>
     <div class="hero-side">
       <div class="ring-box">
@@ -378,6 +421,30 @@ footer{background:var(--lowest);margin-top:8px}
   <main id="grid"></main>
 </div>
 
+<dialog id="backup" aria-labelledby="backupTitle">
+  <form method="dialog" class="dlg-close"><button aria-label="Cerrar / Close">✕</button></form>
+  <h2 id="backupTitle" data-i18n="backupTitle"></h2>
+  <p class="dlg-intro" data-i18n="backupIntro"></p>
+
+  <div class="dlg-block">
+    <span class="label" data-i18n="yourCode"></span>
+    <div class="code-row">
+      <output id="codeOut" class="code"></output>
+      <button class="btn-gold" id="codeCopy" data-i18n="copy"></button>
+    </div>
+    <p class="dlg-hint" data-i18n="copyHint"></p>
+  </div>
+
+  <div class="dlg-block">
+    <label class="label" for="codeIn" data-i18n="restoreLabel"></label>
+    <div class="code-row">
+      <input id="codeIn" class="code" autocomplete="off" spellcheck="false" placeholder="A2-…">
+      <button class="btn-void" id="codeRestore" data-i18n="restore"></button>
+    </div>
+    <p class="dlg-hint" id="restoreMsg" data-i18n="restoreHint" aria-live="polite"></p>
+  </div>
+</dialog>
+
 <footer>
   <div class="foot-in">
     <div class="foot-brand"><b>AION 2</b><span class="label" data-i18n="footTag"></span></div>
@@ -402,6 +469,13 @@ const I18N = {
     sectionReset:"Reiniciar sección", activity:"Actividad", completed:"Progreso",
     footTag:"· Registro de ascendidos",
     kofi:"Invítame un café", madeBy:"Hecho por",
+    backupBtn:"Respaldo del progreso", backupTitle:"Respaldo del progreso",
+    backupIntro:"Guarda este código para recuperar tus marcas en otro navegador, en el celular o si borras los datos del navegador.",
+    yourCode:"Tu código actual", copy:"Copiar", copied:"¡Copiado!",
+    copyHint:"El código cambia cada vez que marcas algo. Cópialo de nuevo cuando quieras actualizar tu respaldo.",
+    restoreLabel:"Restaurar desde un código", restore:"Restaurar",
+    restoreHint:"Reemplaza todas tus marcas actuales por las del código.",
+    restoreOk:"Progreso restaurado.", restoreBad:"Código no válido. Revisa que esté completo.",
     disclaimer:"Herramienta hecha por fans. No afiliada a NCSOFT.",
     synced:"Sincronizado con tu cuenta", saved:"Guardado en tu cuenta", localOnly:"Guardado solo en este navegador",
     sections:{
@@ -455,6 +529,13 @@ const I18N = {
     sectionReset:"Reset section", activity:"Activity", completed:"Progress",
     footTag:"· Ascended log",
     kofi:"Buy me a coffee", madeBy:"Made by",
+    backupBtn:"Progress backup", backupTitle:"Progress backup",
+    backupIntro:"Save this code to recover your checks in another browser, on your phone, or after clearing browser data.",
+    yourCode:"Your current code", copy:"Copy", copied:"Copied!",
+    copyHint:"The code changes every time you check something. Copy it again whenever you want to update your backup.",
+    restoreLabel:"Restore from a code", restore:"Restore",
+    restoreHint:"Replaces all your current checks with the ones in the code.",
+    restoreOk:"Progress restored.", restoreBad:"Invalid code. Make sure it's complete.",
     disclaimer:"Fan-made tool. Not affiliated with NCSOFT.",
     synced:"Synced with your account", saved:"Saved to your account", localOnly:"Saved in this browser only",
     sections:{
@@ -694,10 +775,84 @@ function persist(){
   }catch(e){ dbDoc = null; }
 })();
 
+/* Ask the browser not to evict our storage (once per browser, on first check) */
+function askPersistent(){
+  try {
+    if (localStorage.getItem("aion2-persist-asked")) return;
+    localStorage.setItem("aion2-persist-asked", "1");
+  } catch(e){ return; }
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(()=>{});
+}
+
+/* ---- Backup code: one bit per checkbox, fixed order, plus a checksum byte ---- */
+const CODE_PREFIX = "A2-";
+function codeKeys(){
+  const S = I18N.es.sections, keys = [];
+  for (const s of SECTIONS) S[s.id][2].forEach((_,i) => keys.push(`${s.id}-${i}`));
+  S[ALTS.id][2].forEach((_,i) => { for (let c=1;c<=ALTS.cols;c++) keys.push(`alts-${i}-${c}`); });
+  return keys;
+}
+const b64 = bytes => btoa(String.fromCharCode(...bytes)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+const unb64 = str => Uint8Array.from(atob(str.replace(/-/g,"+").replace(/_/g,"/")), c => c.charCodeAt(0));
+function encodeState(){
+  const keys = codeKeys(), bytes = new Uint8Array(Math.ceil(keys.length/8) + 1);
+  keys.forEach((k,i) => { if (state[k]) bytes[i>>3] |= 1 << (i & 7); });
+  bytes[bytes.length-1] = bytes.slice(0,-1).reduce((a,b) => (a + b) & 255, keys.length);
+  return CODE_PREFIX + b64(bytes);
+}
+function decodeCode(code){
+  code = code.trim().replace(/\s+/g, "");
+  if (code.toUpperCase().startsWith(CODE_PREFIX)) code = code.slice(CODE_PREFIX.length);
+  const keys = codeKeys();
+  let bytes; try { bytes = unb64(code); } catch(e){ return null; }
+  if (bytes.length !== Math.ceil(keys.length/8) + 1) return null;
+  const sum = bytes.slice(0,-1).reduce((a,b) => (a + b) & 255, keys.length);
+  if (sum !== bytes[bytes.length-1]) return null;
+  const next = {};
+  keys.forEach((k,i) => { if (bytes[i>>3] & (1 << (i & 7))) next[k] = true; });
+  return next;
+}
+
+const dlg = document.getElementById("backup"), codeOut = document.getElementById("codeOut"),
+      codeIn = document.getElementById("codeIn"), restoreMsg = document.getElementById("restoreMsg"),
+      copyBtn = document.getElementById("codeCopy");
+function setRestoreMsg(key, cls){
+  restoreMsg.textContent = T()[key]; restoreMsg.dataset.i18n = key;
+  restoreMsg.className = "dlg-hint" + (cls ? " "+cls : "");
+}
+document.getElementById("backupOpen").addEventListener("click", ()=>{
+  codeOut.textContent = encodeState();
+  codeIn.value = ""; setRestoreMsg("restoreHint");
+  copyBtn.textContent = T().copy;
+  dlg.showModal();
+});
+dlg.addEventListener("click", e => { /* close on backdrop click */
+  if (e.target !== dlg) return;
+  const r = dlg.getBoundingClientRect();
+  if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close();
+});
+copyBtn.addEventListener("click", async ()=>{
+  const text = codeOut.textContent;
+  try { await navigator.clipboard.writeText(text); }
+  catch(e){ const r = document.createRange(); r.selectNodeContents(codeOut); const s = getSelection(); s.removeAllRanges(); s.addRange(r); document.execCommand("copy"); }
+  copyBtn.textContent = T().copied; play("check");
+  setTimeout(()=>{ copyBtn.textContent = T().copy; }, 1800);
+});
+function doRestore(){
+  const next = decodeCode(codeIn.value);
+  if (!next){ setRestoreMsg("restoreBad", "err"); play("uncheck"); return; }
+  state = next; render(); persist(); askPersistent();
+  codeOut.textContent = encodeState();
+  setRestoreMsg("restoreOk", "ok"); play("complete");
+}
+document.getElementById("codeRestore").addEventListener("click", doRestore);
+codeIn.addEventListener("keydown", e => { if (e.key === "Enter") doRestore(); });
+
 grid.addEventListener("change", e=>{
   const b = e.target.closest("input[data-key]"); if (!b) return;
   if (b.checked) state[b.dataset.key] = true; else delete state[b.dataset.key];
   render(); persist();
+  if (b.checked) askPersistent();
   play(!b.checked ? "uncheck" : completes(b.dataset.key) ? "complete" : "check");
 });
 grid.addEventListener("click", e=>{
