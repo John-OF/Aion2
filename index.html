@@ -3,237 +3,369 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
 <title>Aion 2 · Registro del Daeva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M60 20 C68 35 88 38 98 48 C92 56 82 56 74 53 C82 62 80 72 70 76 C65 68 62 60 60 52 C58 60 55 68 50 76 C40 72 38 62 46 53 C38 56 28 56 22 48 C32 38 52 35 60 20 Z' fill='%23dfa837'/%3E%3Cpolygon points='60,35 68,60 60,85 52,60' fill='%2338bdf8' stroke='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Alegreya+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600;6..96,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0c1322; --bg2:#121c31; --panel:#141f36; --line:#2a3a5c;
-  --text:#e9e3d3; --muted:#9aa6bf;
-  --gold:#d8b46a; --gold-dim:#8a7040;
-  --elyos:#74bde9; --asmo:#c9485f; --alts:#a98be0;
-  --check-bg:#0a101d;
-  box-sizing:border-box;
-  padding-top:env(safe-area-inset-top,0px);
+  --bg:#11131d; --lowest:#0c0e18; --low:#191b26; --cont:#1d1f2a; --high:#282934; --highest:#323440;
+  --text:#e1e1f0; --muted:#d3c4af; --faint:#9ca4c4; --dim:#5a6282;
+  --gold:#fec350; --gold-2:#dfa837; --gold-3:#f7bd4b; --on-gold:#3d2a00;
+  --aether:#49dfef; --void:#d0bcff; --void-2:#7a3bf5; --rift:#ff8a9a; --rift-2:#e0445f;
+  --serif:"Bodoni Moda", Georgia, serif;
+  --sans:"Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"Space Grotesk", ui-monospace, "Segoe UI", sans-serif;
+  --r:16px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--bg)}
+body{
+  margin:0; min-height:100vh; color:var(--text); font:14px/1.6 var(--sans);
+  background:
+    radial-gradient(900px 500px at 50% -120px, rgba(60,40,120,.35), transparent 70%),
+    var(--bg);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme: light){
-  :root:not([data-theme="dark"]){
-    --bg:#efe7d6; --bg2:#e6dcc6; --panel:#fbf7ee; --line:#cdbf9f;
-    --text:#2a2418; --muted:#6d6450;
-    --gold:#9a7428; --gold-dim:#c7a868;
-    --elyos:#2b7fb5; --asmo:#b0324a; --alts:#6b4fb0;
-    --check-bg:#fffdf8;
-  }
-}
-:root[data-theme="light"]{
-  --bg:#efe7d6; --bg2:#e6dcc6; --panel:#fbf7ee; --line:#cdbf9f;
-  --text:#2a2418; --muted:#6d6450;
-  --gold:#9a7428; --gold-dim:#c7a868;
-  --elyos:#2b7fb5; --asmo:#b0324a; --alts:#6b4fb0; --check-bg:#fffdf8;
-}
-:root[data-theme="dark"]{
-  --bg:#0c1322; --bg2:#121c31; --panel:#141f36; --line:#2a3a5c;
-  --text:#e9e3d3; --muted:#9aa6bf;
-  --gold:#d8b46a; --gold-dim:#8a7040;
-  --elyos:#74bde9; --asmo:#c9485f; --alts:#a98be0; --check-bg:#0a101d;
-}
-*,*::before,*::after{box-sizing:inherit}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{
-  margin:0; min-height:100vh;
-  background:
-    radial-gradient(1200px 600px at 85% -10%, color-mix(in srgb,var(--elyos) 14%,transparent), transparent 60%),
-    radial-gradient(900px 500px at -10% 110%, color-mix(in srgb,var(--asmo) 12%,transparent), transparent 60%),
-    var(--bg);
-  color:var(--text);
-  font:17px/1.5 "Alegreya Sans", "Segoe UI", system-ui, sans-serif;
-}
-.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+button{font:inherit;color:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.label{font:600 11px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase}
 
-/* Language switch */
-.langs{display:flex;justify-content:flex-end;gap:6px;margin-bottom:12px}
-.langs .mini.on{color:var(--gold);border-color:var(--gold)}
+/* ---------- Top bar ---------- */
+.topbar{
+  position:sticky; top:0; z-index:20;
+  background:rgba(12,14,24,.82); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  box-shadow:0 4px 24px rgba(0,0,0,.6);
+  padding-top:env(safe-area-inset-top,0px);
+}
+.topbar-in{max-width:1400px;margin:0 auto;height:68px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand svg{width:40px;height:40px;flex:none}
+.brand-name{font:700 16px/1.15 var(--serif);letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.brand-sub{display:flex;align-items:center;gap:6px;color:var(--aether);font-size:10px;margin-top:2px}
+.pulse{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+.tb-actions{display:flex;align-items:center;gap:10px}
+.seg{display:flex;gap:2px;background:var(--lowest);padding:3px;border-radius:999px}
+.seg button{
+  border:0;background:none;cursor:pointer;padding:4px 12px;border-radius:999px;
+  font:600 11px/1.4 var(--mono);letter-spacing:.1em;color:var(--muted);
+}
+.seg button:hover{color:var(--text)}
+.seg button.on{background:var(--gold);color:var(--on-gold);box-shadow:0 0 10px rgba(254,195,80,.45)}
+.icon-btn{
+  width:38px;height:38px;border-radius:10px;border:0;cursor:pointer;
+  background:var(--cont);color:var(--muted);display:grid;place-items:center;
+}
+.icon-btn:hover{color:var(--gold);background:var(--high)}
+.icon-btn svg{width:20px;height:20px}
+.icon-btn[aria-pressed="false"] .wave{display:none}
+.icon-btn[aria-pressed="true"] .mute{display:none}
+:focus-visible{outline:2px solid var(--aether);outline-offset:2px}
 
-/* Header */
-header{
-  display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center;
-  border-bottom:1px solid var(--line); padding-bottom:22px; margin-bottom:28px;
+/* ---------- Layout ---------- */
+.wrap{max-width:1400px;margin:0 auto;padding:24px 24px 48px;display:grid;gap:24px}
+
+/* ---------- Hero ---------- */
+.hero{
+  position:relative; overflow:hidden; border-radius:var(--r);
+  background:rgba(12,14,24,.8); box-shadow:0 20px 60px rgba(0,0,0,.85);
+  padding:28px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:24px;
+}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;pointer-events:none;filter:blur(110px)}
+.hero::before{width:380px;height:380px;left:-80px;top:-140px;background:rgba(254,195,80,.12)}
+.hero::after{width:480px;height:480px;right:20%;top:-160px;background:rgba(95,3,218,.25)}
+.hero > *{position:relative;z-index:1}
+.hero-text{max-width:720px}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;
+  background:rgba(254,195,80,.1);color:var(--gold);font-size:10px;
 }
 h1{
-  font-family:"Cinzel", Georgia, serif; font-weight:700;
-  font-size:clamp(28px,4.4vw,46px); line-height:1.05; margin:0;
-  letter-spacing:.02em; color:var(--gold);
+  font:700 clamp(32px,5vw,52px)/1.1 var(--serif); letter-spacing:.03em; color:var(--gold);
+  margin:10px 0 6px; text-shadow:0 0 20px rgba(254,195,80,.4);
 }
-h1 small{display:block;font-size:.42em;color:var(--muted);font-weight:500;letter-spacing:.06em;margin-top:8px}
-.sub{color:var(--muted);margin:10px 0 0;max-width:52ch}
+.hero-meta{display:flex;flex-wrap:wrap;gap:8px;color:var(--muted);margin-bottom:8px}
+.hero-meta .a{color:var(--aether)} .hero-meta .g{color:#ffdea7} .hero-meta .v{color:var(--void)}
+.hero-desc{color:var(--muted);margin:0;max-width:62ch;font-size:15px}
+.hero-side{display:flex;flex-wrap:wrap;align-items:center;gap:20px}
 
-/* Reset seal */
-.seal-box{display:flex;flex-direction:column;align-items:center;gap:8px}
-.seal{
-  position:relative; width:148px; height:148px; border-radius:50%;
-  border:none; padding:0; cursor:pointer; background:transparent; color:var(--gold);
-  font-family:"Cinzel",Georgia,serif;
-}
-.seal svg{position:absolute;inset:0;width:100%;height:100%}
-.seal .ring{transform-origin:50% 50%; animation:spin 60s linear infinite}
-.seal:hover .ring{animation-duration:12s}
-.seal .core{
-  position:absolute; inset:34px; border-radius:50%;
-  display:grid; place-items:center;
-  background:radial-gradient(circle at 50% 40%, color-mix(in srgb,var(--gold) 22%,var(--panel)), var(--panel));
-  border:1px solid var(--gold-dim);
-  font-size:19px; font-weight:700; letter-spacing:.08em;
-  transition:background .2s, color .2s;
-}
-.seal.armed .core{background:radial-gradient(circle, color-mix(in srgb,var(--asmo) 45%,var(--panel)), var(--panel)); color:#fff; font-size:14px; line-height:1.15; text-align:center}
-.seal.armed .ring{animation-duration:3s; color:var(--asmo)}
-.seal.flash .core{animation:flash .7s ease}
-.seal:focus-visible{outline:2px solid var(--elyos);outline-offset:4px}
-.seal-hint{font-size:14px;color:var(--muted);text-align:center;max-width:18ch}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes flash{0%{box-shadow:0 0 0 0 var(--gold)}100%{box-shadow:0 0 0 30px transparent}}
+.ring-box{display:flex;align-items:center;gap:16px;background:rgba(29,31,42,.7);padding:16px 20px 16px 16px;border-radius:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.ring{position:relative;width:80px;height:80px;flex:none}
+.ring svg{width:80px;height:80px;transform:rotate(-90deg)}
+.ring .track{stroke:var(--highest)}
+.ring .fill{transition:stroke-dashoffset .7s ease-out}
+.ring-num{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring-num b{font:700 17px/1 var(--sans);color:var(--gold)}
+.ring-num span{font-size:8px;color:var(--muted);margin-top:3px}
+.ring-info .label{color:var(--text)}
+.ring-info div{color:var(--muted);font-size:13px}
 
-/* Grid */
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px;align-items:start}
+.reset-wrap{position:relative}
+.reset{
+  display:flex;align-items:center;gap:14px;text-align:left;cursor:pointer;border:0;
+  padding:10px 20px 10px 12px;border-radius:12px;
+  background:linear-gradient(135deg,var(--high),var(--cont) 50%,var(--lowest));
+  box-shadow:0 4px 25px rgba(0,0,0,.6); transition:box-shadow .3s;
+}
+.reset:hover{box-shadow:0 0 30px rgba(254,195,80,.35)}
+.reset .orb{
+  width:48px;height:48px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(254,195,80,.1);color:var(--gold);transition:background .2s;
+}
+.reset .orb svg{width:26px;height:26px;transition:transform .7s}
+.reset:hover .orb svg{transform:rotate(-180deg)}
+.reset .t{display:block;color:var(--gold);font:700 14px/1.3 var(--sans);letter-spacing:.14em;text-transform:uppercase}
+.reset .s{display:block;color:var(--muted);font-size:11px;font-family:var(--mono)}
+.reset.armed{box-shadow:0 0 0 1px var(--rift-2),0 0 30px rgba(224,68,95,.45)}
+.reset.armed .orb{background:rgba(224,68,95,.25);color:#fff}
+.reset.armed .t{color:#ffb3bf}
+.reset.flash .orb{animation:flash .7s ease}
+@keyframes flash{0%{box-shadow:0 0 0 0 var(--gold)}100%{box-shadow:0 0 0 26px transparent}}
+.toast{
+  position:absolute;right:0;top:calc(100% + 8px);white-space:nowrap;
+  background:#93000a;color:#ffdad6;font:600 11px/1.4 var(--mono);letter-spacing:.04em;
+  padding:5px 12px;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.5);
+  opacity:0;transform:translateY(-4px);transition:opacity .2s,transform .2s;pointer-events:none;
+}
+.toast.show{opacity:1;transform:none}
+
+/* ---------- Cards ---------- */
+#grid{display:grid;gap:24px}
+.triad{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch}
 .card{
-  background:var(--panel); border:1px solid var(--line); border-radius:6px;
-  border-top:3px solid var(--accent); overflow:hidden;
+  position:relative; overflow:hidden; border-radius:var(--r);
+  background:rgba(25,27,38,.92); box-shadow:0 12px 36px rgba(0,0,0,.6);
+  padding:18px 18px 14px; display:flex; flex-direction:column;
 }
-.card.wide{grid-column:1/-1}
-.card-head{
-  display:flex; align-items:baseline; justify-content:space-between; gap:12px;
-  padding:14px 18px 10px;
+.card::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:var(--topline);opacity:.85}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.card-title{display:flex;align-items:center;gap:12px;min-width:0}
+.badge{
+  width:40px;height:40px;border-radius:10px;flex:none;display:grid;place-items:center;
+  background:color-mix(in srgb,var(--acc) 16%,transparent);color:var(--acc);
+  box-shadow:0 0 14px color-mix(in srgb,var(--acc) 28%,transparent);
 }
-h2{font-family:"Cinzel",Georgia,serif;font-weight:700;font-size:20px;margin:0;color:var(--accent);letter-spacing:.03em}
-.meta{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted);white-space:nowrap}
-.count{font-variant-numeric:tabular-nums;color:var(--text);font-weight:700}
-.mini{
-  background:none;border:1px solid var(--line);color:var(--muted);border-radius:4px;
-  font:inherit;font-size:13px;padding:2px 8px;cursor:pointer;
+.badge svg{width:22px;height:22px}
+h2{font:600 20px/1.25 var(--serif);letter-spacing:.03em;color:var(--acc);margin:0}
+.tag{color:var(--muted);font-size:10px;margin-top:2px}
+.card-tools{display:flex;align-items:center;gap:6px;flex:none}
+.pill{
+  padding:2px 10px;border-radius:999px;font:700 11px/1.5 var(--mono);letter-spacing:.06em;
+  background:color-mix(in srgb,var(--acc) 85%,#000);color:var(--lowest);font-variant-numeric:tabular-nums;
 }
-.mini:hover{color:var(--text);border-color:var(--accent)}
-.mini:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.bar{height:3px;background:var(--bg2);margin:0 18px 6px;border-radius:2px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.mini-reset{
+  width:30px;height:30px;border-radius:8px;border:0;background:none;cursor:pointer;
+  color:var(--muted);display:grid;place-items:center;
+}
+.mini-reset:hover{color:var(--acc);background:var(--cont)}
+.mini-reset svg{width:18px;height:18px}
+.bar{height:6px;border-radius:999px;background:var(--highest);overflow:hidden;margin-bottom:14px}
+.bar i{display:block;height:100%;width:0;border-radius:999px;background:var(--grad);box-shadow:0 0 8px color-mix(in srgb,var(--acc) 60%,transparent);transition:width .5s}
 
-ul{list-style:none;margin:0;padding:0 8px 10px}
-li label{
-  display:flex; align-items:center; gap:12px; padding:9px 10px; border-radius:4px;
-  cursor:pointer; user-select:none;
+.tasks{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.task label{
+  display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;cursor:pointer;
+  user-select:none;background:rgba(29,31,42,.6);transition:background .15s;
 }
-li label:hover{background:var(--bg2)}
-li input:checked + .box + .txt{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--gold-dim)}
+.task label:hover{background:var(--cont)}
+.task .txt{color:var(--text);font-size:14px;transition:color .15s}
+.task input:checked ~ .txt{color:var(--muted);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--acc) 70%,transparent)}
+.task label:hover .txt{color:var(--text)}
 
-/* Checkbox as crystal */
-input[type=checkbox]{position:absolute;opacity:0;width:1px;height:1px}
-.box{
-  flex:none; width:22px; height:22px; transform:rotate(45deg) scale(.82);
-  border:1.5px solid var(--gold-dim); background:var(--check-bg); border-radius:3px;
-  display:grid; place-items:center; transition:background .15s,border-color .15s;
+/* Diamond crystal checkbox */
+input[type=checkbox]{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.dia{
+  flex:none;width:16px;height:16px;margin:2px;transform:rotate(45deg);border-radius:2px;
+  border:1px solid var(--dim);background:rgba(8,10,18,.6);
+  display:grid;place-items:center;transition:background .15s,border-color .15s,box-shadow .15s;
 }
-.box::after{
-  content:""; width:8px; height:8px; background:var(--bg); border-radius:1px;
-  transform:scale(0); transition:transform .15s;
-}
-input:checked + .box{background:var(--accent);border-color:var(--accent)}
-input:checked + .box::after{transform:scale(1)}
-input:focus-visible + .box{outline:2px solid var(--elyos);outline-offset:3px}
+.dia::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--lowest);transform:scale(0);transition:transform .15s}
+input:checked + .dia{background:var(--acc);border-color:var(--acc);box-shadow:0 0 10px color-mix(in srgb,var(--acc) 70%,transparent)}
+input:checked + .dia::after{transform:scale(1)}
+input:focus-visible + .dia{outline:2px solid var(--aether);outline-offset:3px}
 
-/* Alts table */
-.scroll{overflow-x:auto;padding:0 8px 12px}
-table{border-collapse:collapse;width:100%;min-width:640px}
-th,td{padding:8px 6px;text-align:center;border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
-th{font-family:"Cinzel",Georgia,serif;font-size:14px;font-weight:500;color:var(--muted)}
-th.done{color:var(--accent)}
-td:first-child,th:first-child{text-align:left;padding-left:10px}
-td:first-child{min-width:220px}
-tbody tr:hover{background:var(--bg2)}
-td label{display:inline-grid;place-items:center;padding:6px;cursor:pointer}
-tfoot td{font-size:13px;color:var(--muted);border-bottom:none;font-variant-numeric:tabular-nums}
-
-footer{margin-top:28px;color:var(--muted);font-size:14px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
-#sync{min-height:1em}
-.tools{display:flex;gap:8px}
-
-@media (max-width:620px){
-  header{grid-template-columns:1fr}
-  .seal-box{flex-direction:row;justify-content:flex-start}
-  .seal{width:112px;height:112px}
-  .seal .core{inset:26px;font-size:16px}
-  .seal-hint{text-align:left}
+/* ---------- Alts ---------- */
+.alts{padding:22px}
+.alts .card-head{margin-bottom:18px}
+.alts h2{font-size:26px}
+.alts .tag{font:400 14px/1.4 var(--sans);letter-spacing:0;text-transform:none}
+.alts .badge{width:48px;height:48px}
+.matrix{overflow-x:auto;border-radius:12px;background:rgba(12,14,24,.5)}
+table{border-collapse:collapse;width:100%;min-width:760px}
+th,td{padding:12px 8px;text-align:center}
+thead th{background:rgba(29,31,42,.9);vertical-align:bottom}
+thead th:first-child{color:var(--gold);text-align:left;padding-left:16px}
+.alt-head{display:flex;flex-direction:column;align-items:center;gap:6px}
+.alt-head .num{
+  width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  background:color-mix(in srgb,var(--c) 20%,transparent);color:var(--c);font:700 12px/1 var(--mono);
 }
-@media (prefers-reduced-motion:reduce){
-  .seal .ring{animation:none}
-  *{transition:none!important}
+.alt-head .nm{font:600 13px/1.2 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
+th.done .nm{color:var(--gold)}
+tbody tr{border-top:1px solid rgba(255,255,255,.04)}
+tbody tr:hover{background:rgba(40,41,52,.4)}
+tbody th,tfoot th{
+  position:sticky;left:0;z-index:1;text-align:left;padding-left:16px;
+  background:rgba(25,27,38,.97);font:600 14px/1.3 var(--sans);color:var(--text);min-width:230px;
 }
+tbody th .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:10px;vertical-align:1px}
+td label{display:inline-grid;place-items:center;padding:8px;cursor:pointer;--acc:var(--void)}
+td label:hover .dia{border-color:var(--void)}
+tfoot tr{background:rgba(40,41,52,.55)}
+tfoot th{background:rgba(40,41,52,.97);color:var(--void);font:700 13px/1.3 var(--sans);letter-spacing:.08em;text-transform:uppercase}
+.colp{display:flex;flex-direction:column;align-items:center;gap:6px;font:700 14px/1 var(--mono);font-variant-numeric:tabular-nums}
+.colp i{display:block;width:36px;height:3px;border-radius:2px;background:var(--highest);overflow:hidden}
+.colp i b{display:block;height:100%;width:0;background:var(--void);transition:width .4s}
+.colp.full{color:var(--gold)} .colp.full i b{background:var(--gold)}
+
+/* ---------- Footer ---------- */
+footer{background:var(--lowest);margin-top:8px}
+.foot-in{max-width:1400px;margin:0 auto;padding:28px 24px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;color:var(--muted)}
+.foot-brand{display:flex;align-items:baseline;gap:10px}
+.foot-brand b{font:600 18px/1 var(--serif);letter-spacing:.14em;color:var(--gold)}
+.foot-note{font-size:12px;color:var(--faint)}
+#sync{color:var(--aether)}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1100px){ .triad{grid-template-columns:1fr 1fr} .triad .card:last-child{grid-column:1/-1} }
+@media (max-width:720px){
+  .topbar-in{padding:0 16px;height:60px}
+  .brand-sub{display:none}
+  .brand-name{font-size:14px}
+  .wrap{padding:16px 16px 40px;gap:16px}
+  .hero{padding:20px}
+  .hero-side{width:100%}
+  .ring-box,.reset-wrap{flex:1 1 240px}
+  .reset{width:100%}
+  #grid,.triad{gap:16px}
+  .triad{grid-template-columns:1fr}
+  .alts{padding:16px}
+  .alts h2{font-size:22px}
+  tbody th,tfoot th{min-width:140px;max-width:160px;font-size:13px;padding-left:12px}
+  .foot-in{padding:24px 16px}
+}
+@media (prefers-reduced-motion:reduce){ *{transition:none!important;animation:none!important} }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <nav class="langs" aria-label="Idioma / Language">
-    <button class="mini" data-lang="es" lang="es">ES</button>
-    <button class="mini" data-lang="en" lang="en">EN</button>
-  </nav>
-  <header>
-    <div>
-      <h1><span data-i18n="title">Registro del Daeva</span><small>Aion 2 · Main + 7 alts</small></h1>
-      <p class="sub" data-i18n="sub"></p>
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <svg viewBox="0 0 120 120" fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#fff5c0"/><stop offset="50%" stop-color="#dfa837"/><stop offset="100%" stop-color="#8c6218"/>
+          </linearGradient>
+          <radialGradient id="etherGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.6"/><stop offset="60%" stop-color="#dfa837" stop-opacity="0.2"/><stop offset="100%" stop-color="#0a0c16" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <circle cx="60" cy="60" r="54" fill="url(#etherGlow)"/>
+        <circle cx="60" cy="60" r="52" stroke="url(#goldGrad)" stroke-width="1.5" stroke-dasharray="4 2"/>
+        <circle cx="60" cy="60" r="46" stroke="#e5c158" stroke-width="0.8" opacity="0.6"/>
+        <path d="M60 20 C68 35 88 38 98 48 C92 56 82 56 74 53 C82 62 80 72 70 76 C65 68 62 60 60 52 C58 60 55 68 50 76 C40 72 38 62 46 53 C38 56 28 56 22 48 C32 38 52 35 60 20 Z" fill="url(#goldGrad)" filter="url(#glow)" opacity="0.95"/>
+        <polygon points="60,35 68,60 60,85 52,60" fill="#38bdf8" stroke="#fff" stroke-width="1" filter="url(#glow)"/>
+        <polygon points="60,45 65,60 60,75 55,60" fill="#bae6fd" opacity="0.85"/>
+        <circle cx="60" cy="8" r="2" fill="#dfa837"/><circle cx="60" cy="112" r="2" fill="#dfa837"/>
+        <circle cx="8" cy="60" r="2" fill="#dfa837"/><circle cx="112" cy="60" r="2" fill="#dfa837"/>
+        <polygon points="60,92 63,98 60,104 57,98" fill="#e5c158"/>
+      </svg>
+      <div>
+        <div class="brand-name" data-i18n="title">Registro del Daeva</div>
+        <div class="brand-sub label"><span class="pulse"></span><span data-i18n="brandSub"></span></div>
+      </div>
     </div>
-    <div class="seal-box">
-      <button class="seal" id="reset">
-        <svg viewBox="0 0 148 148" aria-hidden="true">
-          <g class="ring" fill="none" stroke="currentColor">
-            <circle cx="74" cy="74" r="70" stroke-width="1" opacity=".6"/>
-            <circle cx="74" cy="74" r="62" stroke-width="1.5" stroke-dasharray="2 6"/>
-            <circle cx="74" cy="74" r="54" stroke-width="1" opacity=".5"/>
-            <g stroke-width="1.5">
-              <path d="M74 4 l6 10 h-12z"/><path d="M74 144 l6 -10 h-12z"/>
-              <path d="M4 74 l10 6 v-12z"/><path d="M144 74 l-10 6 v-12z"/>
-            </g>
-            <g stroke-width="1" opacity=".8">
-              <path d="M24.5 24.5 l8 3 -3 -8z"/><path d="M123.5 24.5 l-8 3 3 -8z"/>
-              <path d="M24.5 123.5 l8 -3 -3 8z"/><path d="M123.5 123.5 l-8 -3 3 8z"/>
-            </g>
-          </g>
-        </svg>
-        <span class="core" id="resetLabel">Reset</span>
+    <div class="tb-actions">
+      <div class="seg langs" role="group" aria-label="Idioma / Language">
+        <button data-lang="es" lang="es">ES</button>
+        <button data-lang="en" lang="en">EN</button>
+      </div>
+      <button class="icon-btn" id="sound" aria-pressed="true">
+        <svg class="wave" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg>
+        <svg class="mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12h2M9 12h2M14 12h2M19 12h1"/><path d="M4 20 20 4"/></svg>
       </button>
-      <span class="seal-hint" id="resetHint"></span>
     </div>
-  </header>
+  </div>
+</header>
 
-  <main class="grid" id="grid"></main>
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-text">
+      <span class="chip label"><span class="pulse"></span><span data-i18n="chip"></span></span>
+      <h1 data-i18n="title">Registro del Daeva</h1>
+      <div class="hero-meta label">
+        <span class="a">Aion 2</span><span>◊</span><span class="g">Main</span><span>+</span><span class="v" data-i18n="altsCount"></span>
+      </div>
+      <p class="hero-desc" data-i18n="sub"></p>
+    </div>
+    <div class="hero-side">
+      <div class="ring-box">
+        <div class="ring">
+          <svg viewBox="0 0 80 80" aria-hidden="true">
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fec350"/><stop offset="60%" stop-color="#49dfef"/><stop offset="100%" stop-color="#d0bcff"/>
+              </linearGradient>
+            </defs>
+            <circle class="track" cx="40" cy="40" r="32" fill="none" stroke-width="5"/>
+            <circle class="fill" id="ringFill" cx="40" cy="40" r="32" fill="none" stroke="url(#ringGrad)" stroke-width="5" stroke-linecap="round" stroke-dasharray="201.06" stroke-dashoffset="201.06"/>
+          </svg>
+          <div class="ring-num"><b id="ringPct">0%</b><span class="label" data-i18n="global"></span></div>
+        </div>
+        <div class="ring-info">
+          <span class="label" data-i18n="progress"></span>
+          <div id="ringCount"></div>
+        </div>
+      </div>
+      <div class="reset-wrap">
+        <button class="reset" id="reset">
+          <span class="orb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg></span>
+          <span><span class="t" id="resetLabel"></span><span class="s" id="resetHint"></span></span>
+        </button>
+        <div class="toast" id="toast" role="status"></div>
+      </div>
+    </div>
+  </section>
 
-  <footer>
-    <span id="sync"></span>
-    <span class="tools">
-      <button class="mini" id="sound"></button>
-      <button class="mini" id="theme" data-i18n="theme"></button>
-    </span>
-  </footer>
+  <main id="grid"></main>
 </div>
+
+<footer>
+  <div class="foot-in">
+    <div class="foot-brand"><b>AION 2</b><span class="label" data-i18n="footTag"></span></div>
+    <span class="label" id="sync"></span>
+    <span class="foot-note" data-i18n="disclaimer"></span>
+  </div>
+</footer>
 
 <script>
 const I18N = {
   es: {
     docTitle:"Aion 2 · Registro del Daeva",
     title:"Registro del Daeva",
-    sub:"Marca lo que ya hiciste hoy y esta semana. Tus marcas se guardan solas; el sello las borra todas.",
-    resetAria:"Reset: desmarcar todas las casillas",
-    hint:"Toca dos veces para confirmar", armed:"¿Borrar<br>todo?", again:"Toca otra vez", cleared:"Casillas desmarcadas",
-    theme:"Cambiar tema", themeAria:"Cambiar tema claro u oscuro",
-    soundOn:"Sonido: sí", soundOff:"Sonido: no",
-    sectionReset:"Reiniciar", activity:"Actividad", completed:"Completado",
+    brandSub:"Checklist diario y semanal",
+    chip:"Bitácora de Atreia · Guardado automático",
+    altsCount:"7 alts",
+    sub:"Marca lo que ya hiciste hoy y esta semana. Tus marcas se guardan solas en este navegador.",
+    global:"Global", progress:"Progreso total", tasks:"tareas",
+    resetTitle:"Reset general", resetArmed:"¿Borrar todo?", resetAria:"Reset general: desmarcar todas las casillas",
+    hint:"Doble toque para borrar", again:"Toca otra vez para confirmar", toast:"¡Toca una vez más para borrar todo!", cleared:"Casillas desmarcadas",
+    soundOn:"Sonido activado (clic para silenciar)", soundOff:"Sonido silenciado (clic para activar)",
+    sectionReset:"Reiniciar sección", activity:"Actividad", completed:"Progreso",
+    footTag:"· Registro de ascendidos",
+    disclaimer:"Herramienta hecha por fans. No afiliada a NCSOFT.",
     synced:"Sincronizado con tu cuenta", saved:"Guardado en tu cuenta", localOnly:"Guardado solo en este navegador",
     sections:{
-      diario:["Contenido diario", [
+      diario:["Contenido diario", "Rutina diaria", [
         "5 Dutys (misiones diarias)",
         "1 millón de Kina farmeable",
         "Black Cloud Merchant (mercado negro)"
       ]],
-      pve:["Semanal PvE", [
+      pve:["Semanal PvE", "Mazmorras · Jefes · Misiones", [
         "Gastar la energía",
         "Shugo · 14 entradas",
         "Boss diario · 7 entradas",
@@ -243,7 +375,7 @@ const I18N = {
         "3 Ascension Trial",
         "Misiones de temporada semanal"
       ]],
-      pvp:["Semanal PvP", [
+      pvp:["Semanal PvP", "Abyss · Arenas · Rango", [
         "20 misiones de comando en el Abyss",
         "Corredores de 0-6 (ver cada 72 horas)",
         "Farm de Abyss Points semanales",
@@ -253,7 +385,7 @@ const I18N = {
         "3 victorias en modo 10 vs 10",
         "Suministros por Abyss Points"
       ]],
-      alts:["Contenido repetido con alts", [
+      alts:["Contenido repetido con alts", "Seguimiento de tus 7 personajes secundarios", [
         "Gastar la energía",
         "1 millón de Kina farmeable",
         "3 Ascension Trial",
@@ -267,20 +399,25 @@ const I18N = {
   en: {
     docTitle:"Aion 2 · Daeva Log",
     title:"Daeva Log",
-    sub:"Check off what you've done today and this week. Your checks save automatically; the seal clears them all.",
-    resetAria:"Reset: uncheck all boxes",
-    hint:"Tap twice to confirm", armed:"Clear<br>all?", again:"Tap again", cleared:"All boxes cleared",
-    theme:"Toggle theme", themeAria:"Toggle light or dark theme",
-    soundOn:"Sound: on", soundOff:"Sound: off",
-    sectionReset:"Reset", activity:"Activity", completed:"Completed",
+    brandSub:"Daily & weekly checklist",
+    chip:"Atreia log · Auto-saved",
+    altsCount:"7 alts",
+    sub:"Check off what you've done today and this week. Your checks save automatically in this browser.",
+    global:"Global", progress:"Total progress", tasks:"tasks",
+    resetTitle:"Full reset", resetArmed:"Clear all?", resetAria:"Full reset: uncheck all boxes",
+    hint:"Double tap to clear", again:"Tap again to confirm", toast:"Tap once more to clear everything!", cleared:"All boxes cleared",
+    soundOn:"Sound on (click to mute)", soundOff:"Sound muted (click to unmute)",
+    sectionReset:"Reset section", activity:"Activity", completed:"Progress",
+    footTag:"· Ascended log",
+    disclaimer:"Fan-made tool. Not affiliated with NCSOFT.",
     synced:"Synced with your account", saved:"Saved to your account", localOnly:"Saved in this browser only",
     sections:{
-      diario:["Daily content", [
+      diario:["Daily content", "Daily routine", [
         "5 Duties (daily quests)",
         "1 million farmable Kina",
         "Black Cloud Merchant (black market)"
       ]],
-      pve:["Weekly PvE", [
+      pve:["Weekly PvE", "Dungeons · Bosses · Missions", [
         "Spend energy",
         "Shugo · 14 entries",
         "Daily boss · 7 entries",
@@ -290,7 +427,7 @@ const I18N = {
         "3 Ascension Trial",
         "Weekly season missions"
       ]],
-      pvp:["Weekly PvP", [
+      pvp:["Weekly PvP", "Abyss · Arenas · Rank", [
         "20 command missions in the Abyss",
         "Corridors 0-6 (check every 72 hours)",
         "Weekly Abyss Points farm",
@@ -300,7 +437,7 @@ const I18N = {
         "3 wins in 10 vs 10",
         "Abyss Points supplies"
       ]],
-      alts:["Repeated content on alts", [
+      alts:["Repeated content on alts", "Tracking for your 7 secondary characters", [
         "Spend energy",
         "1 million farmable Kina",
         "3 Ascension Trial",
@@ -313,19 +450,28 @@ const I18N = {
   }
 };
 
+const ICONS = {
+  sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4M5.3 5.3l2.4 2.4M16.3 16.3l2.4 2.4M5.3 18.7l2.4-2.4M16.3 7.7l2.4-2.4"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6z"/><path d="M12 8v8M9 11h6" stroke-linecap="round"/></svg>',
+  swords:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2"/><path d="M9.5 6.5 21 18M14.5 6.5 18 3h3v3l-3.5 3.5M5 14l-2 2 3 3 2-2" opacity=".55"/></svg>',
+  users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.3 3-5 6-5s5.4 1.7 6 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16.5 14c2.4.2 4 1.7 4.5 4.5"/></svg>',
+  reset:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>'
+};
+
 const SECTIONS = [
-  { id:"diario", accent:"var(--gold)" },
-  { id:"pve", accent:"var(--elyos)" },
-  { id:"pvp", accent:"var(--asmo)" }
+  { id:"diario", icon:"sun",    acc:"var(--gold)",   grad:"linear-gradient(90deg,var(--gold),var(--gold-3))", top:"linear-gradient(90deg,var(--gold),var(--gold-3) 40%,transparent)" },
+  { id:"pve",    icon:"shield", acc:"var(--aether)", grad:"linear-gradient(90deg,var(--aether),#8bf2ff)",       top:"linear-gradient(90deg,var(--aether),transparent)" },
+  { id:"pvp",    icon:"swords", acc:"var(--rift)",   grad:"linear-gradient(90deg,var(--rift-2),var(--void-2))", top:"linear-gradient(90deg,var(--rift-2),var(--void-2) 60%,transparent)" }
 ];
-const ALTS = { id:"alts", accent:"var(--alts)", cols:7 };
+const ALTS = { id:"alts", icon:"users", acc:"var(--void)", top:"linear-gradient(90deg,var(--void-2),var(--void),var(--aether))", cols:7 };
+const ALT_COLORS = ["#fec350","#49dfef","#d0bcff","#b18cff","#4ef29f","#f7bd4b","#ff8a9a"];
+const ROW_COLORS = ["#49dfef","#fec350","#fec350","#7a3bf5","#49dfef","#ff8a9a","#e0445f"];
 
 let lang = "es";
 try { lang = localStorage.getItem("aion2-lang") || ((navigator.language||"").toLowerCase().startsWith("es") ? "es" : "en"); } catch(e){}
 if (!I18N[lang]) lang = "es";
 const T = () => I18N[lang];
-const secTitle = id => T().sections[id][0];
-const secItems = id => T().sections[id][1];
+const sec = id => T().sections[id];
 
 const LS_KEY = "aion2-checklist-v1";
 let state = {};
@@ -335,68 +481,78 @@ const grid = document.getElementById("grid");
 const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 function box(key, label){
-  return `<input type="checkbox" data-key="${key}" id="${key}" aria-label="${esc(label)}"><span class="box" aria-hidden="true"></span>`;
+  return `<input type="checkbox" data-key="${key}" id="${key}" aria-label="${esc(label)}"><span class="dia" aria-hidden="true"></span>`;
 }
 function head(s, total){
-  return `<div class="card-head"><h2>${esc(secTitle(s.id))}</h2>
-    <span class="meta"><span><span class="count" data-count="${s.id}">0</span> / ${total}</span>
-    <button class="mini" data-reset="${s.id}">${T().sectionReset}</button></span></div>
-    <div class="bar"><i data-bar="${s.id}"></i></div>`;
+  const [title, tag] = sec(s.id);
+  return `<div class="card-head">
+      <div class="card-title"><span class="badge" aria-hidden="true">${ICONS[s.icon]}</span>
+        <div><h2>${esc(title)}</h2><div class="tag label">${esc(tag)}</div></div></div>
+      <div class="card-tools"><span class="pill"><span data-count="${s.id}">0</span>/${total}</span>
+        <button class="mini-reset" data-reset="${s.id}" title="${T().sectionReset}" aria-label="${T().sectionReset}: ${esc(title)}">${ICONS.reset}</button></div>
+    </div>`;
 }
 
 let allBoxes = [];
 function build(){
-  let html = "";
+  let html = `<div class="triad">`;
   for (const s of SECTIONS){
-    const items = secItems(s.id);
-    html += `<section class="card" style="--accent:${s.accent}" data-sec="${s.id}">${head(s, items.length)}<ul>`;
+    const items = sec(s.id)[2];
+    html += `<section class="card" style="--acc:${s.acc};--grad:${s.grad};--topline:${s.top}">${head(s, items.length)}
+      <div class="bar"><i data-bar="${s.id}"></i></div><ul class="tasks">`;
     items.forEach((it,i)=>{
-      const k = `${s.id}-${i}`;
-      html += `<li><label>${box(k,it)}<span class="txt">${esc(it)}</span></label></li>`;
+      html += `<li class="task"><label>${box(`${s.id}-${i}`, it)}<span class="txt">${esc(it)}</span></label></li>`;
     });
     html += `</ul></section>`;
   }
+  html += `</div>`;
   {
-    const s = ALTS, items = secItems(s.id);
-    html += `<section class="card wide" style="--accent:${s.accent}" data-sec="${s.id}">${head(s, items.length*s.cols)}
-      <div class="scroll"><table><thead><tr><th scope="col">${T().activity}</th>`;
-    for (let c=1;c<=s.cols;c++) html += `<th scope="col" data-colhead="${c}">Alt ${c}</th>`;
+    const s = ALTS, items = sec(s.id)[2];
+    html += `<section class="card alts" style="--acc:${s.acc};--topline:${s.top}">${head(s, items.length*s.cols)}
+      <div class="matrix"><table><thead><tr><th scope="col" class="label">${T().activity}</th>`;
+    for (let c=1;c<=s.cols;c++) html += `<th scope="col" data-colhead="${c}"><div class="alt-head" style="--c:${ALT_COLORS[c-1]}"><span class="num">${c}</span><span class="nm">Alt ${c}</span></div></th>`;
     html += `</tr></thead><tbody>`;
     items.forEach((it,i)=>{
-      html += `<tr><td>${esc(it)}</td>`;
-      for (let c=1;c<=s.cols;c++){
-        const k = `alts-${i}-${c}`;
-        html += `<td><label>${box(k, it+" · Alt "+c)}</label></td>`;
-      }
+      html += `<tr><th scope="row" style="--c:${ROW_COLORS[i % ROW_COLORS.length]}"><span class="dot"></span>${esc(it)}</th>`;
+      for (let c=1;c<=s.cols;c++) html += `<td><label>${box(`alts-${i}-${c}`, it+" · Alt "+c)}</label></td>`;
       html += `</tr>`;
     });
-    html += `</tbody><tfoot><tr><td>${T().completed}</td>`;
-    for (let c=1;c<=s.cols;c++) html += `<td data-colcount="${c}">0/${items.length}</td>`;
+    html += `</tbody><tfoot><tr><th scope="row">${T().completed}</th>`;
+    for (let c=1;c<=s.cols;c++) html += `<td><div class="colp" data-colcount="${c}"><span>0/${items.length}</span><i><b></b></i></div></td>`;
     html += `</tr></tfoot></table></div></section>`;
   }
   grid.innerHTML = html;
   allBoxes = [...document.querySelectorAll("input[data-key]")];
 }
 
+const ringFill = document.getElementById("ringFill"), ringPct = document.getElementById("ringPct"), ringCount = document.getElementById("ringCount");
 function render(){
   allBoxes.forEach(b => b.checked = !!state[b.dataset.key]);
-  const secs = [...SECTIONS, ALTS];
-  for (const s of secs){
+  for (const s of [...SECTIONS, ALTS]){
     const boxes = allBoxes.filter(b => b.dataset.key.startsWith(s.id+"-"));
     const n = boxes.filter(b=>b.checked).length;
     document.querySelector(`[data-count="${s.id}"]`).textContent = n;
-    document.querySelector(`[data-bar="${s.id}"]`).style.width = (boxes.length ? n/boxes.length*100 : 0)+"%";
+    const bar = document.querySelector(`[data-bar="${s.id}"]`);
+    if (bar) bar.style.width = (boxes.length ? n/boxes.length*100 : 0)+"%";
   }
-  const altN = secItems(ALTS.id).length;
+  const altN = sec(ALTS.id)[2].length;
   for (let c=1;c<=ALTS.cols;c++){
     let n=0; for (let i=0;i<altN;i++) if (state[`alts-${i}-${c}`]) n++;
-    document.querySelector(`[data-colcount="${c}"]`).textContent = `${n}/${altN}`;
+    const el = document.querySelector(`[data-colcount="${c}"]`);
+    el.querySelector("span").textContent = `${n}/${altN}`;
+    el.querySelector("b").style.width = (n/altN*100)+"%";
+    el.classList.toggle("full", n===altN);
     document.querySelector(`[data-colhead="${c}"]`).classList.toggle("done", n===altN);
   }
+  const total = allBoxes.length, done = allBoxes.filter(b=>b.checked).length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  ringPct.textContent = pct+"%";
+  ringFill.style.strokeDashoffset = 201.06 - pct/100*201.06;
+  ringCount.textContent = `${done} / ${total} ${T().tasks}`;
 }
 
 const syncEl = document.getElementById("sync");
-const seal = document.getElementById("reset"), label = document.getElementById("resetLabel"), hint = document.getElementById("resetHint");
+const seal = document.getElementById("reset"), label = document.getElementById("resetLabel"), hint = document.getElementById("resetHint"), toast = document.getElementById("toast");
 
 /* ---- Language ---- */
 let syncKey = "";
@@ -406,9 +562,10 @@ function applyLang(){
   document.documentElement.lang = lang;
   document.title = t.docTitle;
   document.querySelectorAll("[data-i18n]").forEach(el => el.textContent = t[el.dataset.i18n]);
-  document.getElementById("theme").setAttribute("aria-label", t.themeAria);
   seal.setAttribute("aria-label", t.resetAria);
+  label.textContent = t.resetTitle;
   hint.textContent = t.hint;
+  toast.textContent = t.toast;
   document.querySelectorAll("[data-lang]").forEach(b => {
     const on = b.dataset.lang === lang;
     b.setAttribute("aria-pressed", on);
@@ -433,8 +590,10 @@ function play(name){
 }
 const soundBtn = document.getElementById("sound");
 function renderSoundBtn(){
-  soundBtn.textContent = soundOn ? T().soundOn : T().soundOff;
+  const t = soundOn ? T().soundOn : T().soundOff;
   soundBtn.setAttribute("aria-pressed", soundOn);
+  soundBtn.setAttribute("aria-label", t);
+  soundBtn.title = t;
 }
 soundBtn.addEventListener("click", ()=>{
   soundOn = !soundOn;
@@ -450,6 +609,7 @@ function completes(key){
     : allBoxes.filter(b => b.dataset.key.startsWith(key.split("-")[0]+"-"));
   return group.every(b => b.checked);
 }
+
 document.querySelector(".langs").addEventListener("click", e=>{
   const b = e.target.closest("[data-lang]"); if (!b || b.dataset.lang === lang) return;
   lang = b.dataset.lang;
@@ -502,12 +662,13 @@ grid.addEventListener("click", e=>{
   play("section-reset");
 });
 
-/* ---- Reset seal with two-tap confirmation ---- */
+/* ---- Full reset with two-tap confirmation ---- */
 let armTimer = null;
 seal.addEventListener("click", ()=>{
   if (!seal.classList.contains("armed")){
-    seal.classList.add("armed"); label.innerHTML = T().armed; hint.textContent = T().again;
-    armTimer = setTimeout(disarm, 3000);
+    seal.classList.add("armed"); label.textContent = T().resetArmed; hint.textContent = T().again;
+    toast.classList.add("show");
+    armTimer = setTimeout(disarm, 3500);
     play("arm");
     return;
   }
@@ -516,18 +677,12 @@ seal.addEventListener("click", ()=>{
   play("reset");
   seal.classList.remove("flash"); void seal.offsetWidth; seal.classList.add("flash");
   hint.textContent = T().cleared;
-  setTimeout(()=>{ hint.textContent = T().hint; }, 2200);
+  setTimeout(()=>{ if (!seal.classList.contains("armed")) hint.textContent = T().hint; }, 2200);
 });
-function disarm(){ clearTimeout(armTimer); seal.classList.remove("armed"); label.textContent = "Reset"; hint.textContent = T().hint; }
-
-/* ---- Theme toggle ---- */
-const root = document.documentElement;
-try { const t = localStorage.getItem("aion2-theme"); if (t) root.dataset.theme = t; } catch(e){}
-document.getElementById("theme").addEventListener("click", ()=>{
-  const dark = root.dataset.theme ? root.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-  root.dataset.theme = dark ? "light" : "dark";
-  try { localStorage.setItem("aion2-theme", root.dataset.theme); } catch(e){}
-});
+function disarm(){
+  clearTimeout(armTimer); seal.classList.remove("armed"); toast.classList.remove("show");
+  label.textContent = T().resetTitle; hint.textContent = T().hint;
+}
 
 applyLang();
 </script>
