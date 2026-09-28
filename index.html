@@ -236,6 +236,18 @@ footer{background:var(--lowest);margin-top:8px}
 .foot-brand{display:flex;align-items:baseline;gap:10px}
 .foot-brand b{font:600 18px/1 var(--serif);letter-spacing:.14em;color:var(--gold)}
 .foot-note{font-size:12px;color:var(--faint)}
+.foot-note a{color:var(--gold);text-decoration:none}
+.foot-note a:hover{text-decoration:underline}
+
+/* ---------- Ko-fi ---------- */
+.kofi{
+  display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;border-radius:10px;
+  color:var(--gold);text-decoration:none;font:600 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid color-mix(in srgb,var(--gold) 45%,transparent);background:rgba(254,195,80,.06);
+  transition:box-shadow .2s,background .2s;
+}
+.kofi:hover{background:rgba(254,195,80,.14);box-shadow:0 0 16px rgba(254,195,80,.35)}
+.kofi svg{width:18px;height:18px;flex:none}
 #sync{color:var(--aether)}
 
 /* ---------- Responsive ---------- */
@@ -244,6 +256,9 @@ footer{background:var(--lowest);margin-top:8px}
   .topbar-in{padding:0 16px;height:60px}
   .brand-sub{display:none}
   .brand-name{font-size:14px}
+  .tb-actions{gap:6px}
+  .kofi{width:38px;padding:0;justify-content:center}
+  .kofi span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .wrap{padding:16px 16px 40px;gap:16px}
   .hero{padding:20px}
   .hero-side{width:100%}
@@ -290,6 +305,10 @@ footer{background:var(--lowest);margin-top:8px}
       </div>
     </div>
     <div class="tb-actions">
+      <a class="kofi" href="https://ko-fi.com/compileorcrash" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13v5a6 6 0 0 1-6 6H10a6 6 0 0 1-6-6z"/><path d="M17 9.5h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3.5c-.6.8.6 1.4 0 2.2M12 3.5c-.6.8.6 1.4 0 2.2"/></svg>
+        <span data-i18n="kofi"></span>
+      </a>
       <div class="seg langs" role="group" aria-label="Idioma / Language">
         <button data-lang="es" lang="es">ES</button>
         <button data-lang="en" lang="en">EN</button>
@@ -363,7 +382,7 @@ footer{background:var(--lowest);margin-top:8px}
   <div class="foot-in">
     <div class="foot-brand"><b>AION 2</b><span class="label" data-i18n="footTag"></span></div>
     <span class="label" id="sync"></span>
-    <span class="foot-note" data-i18n="disclaimer"></span>
+    <span class="foot-note"><span data-i18n="madeBy"></span> <a href="https://ko-fi.com/compileorcrash" target="_blank" rel="noopener">compileorcrash</a> · <span data-i18n="disclaimer"></span></span>
   </div>
 </footer>
 
@@ -382,6 +401,7 @@ const I18N = {
     soundOn:"Sonido activado (clic para silenciar)", soundOff:"Sonido silenciado (clic para activar)",
     sectionReset:"Reiniciar sección", activity:"Actividad", completed:"Progreso",
     footTag:"· Registro de ascendidos",
+    kofi:"Invítame un café", madeBy:"Hecho por",
     disclaimer:"Herramienta hecha por fans. No afiliada a NCSOFT.",
     synced:"Sincronizado con tu cuenta", saved:"Guardado en tu cuenta", localOnly:"Guardado solo en este navegador",
     sections:{
@@ -434,6 +454,7 @@ const I18N = {
     soundOn:"Sound on (click to mute)", soundOff:"Sound muted (click to unmute)",
     sectionReset:"Reset section", activity:"Activity", completed:"Progress",
     footTag:"· Ascended log",
+    kofi:"Buy me a coffee", madeBy:"Made by",
     disclaimer:"Fan-made tool. Not affiliated with NCSOFT.",
     synced:"Synced with your account", saved:"Saved to your account", localOnly:"Saved in this browser only",
     sections:{
