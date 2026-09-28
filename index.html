@@ -155,6 +155,7 @@ tfoot td{font-size:13px;color:var(--muted);border-bottom:none;font-variant-numer
 
 footer{margin-top:28px;color:var(--muted);font-size:14px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 #sync{min-height:1em}
+.tools{display:flex;gap:8px}
 
 @media (max-width:620px){
   header{grid-template-columns:1fr}
@@ -207,7 +208,10 @@ footer{margin-top:28px;color:var(--muted);font-size:14px;display:flex;justify-co
 
   <footer>
     <span id="sync"></span>
-    <button class="mini" id="theme" data-i18n="theme"></button>
+    <span class="tools">
+      <button class="mini" id="sound"></button>
+      <button class="mini" id="theme" data-i18n="theme"></button>
+    </span>
   </footer>
 </div>
 
@@ -220,6 +224,7 @@ const I18N = {
     resetAria:"Reset: desmarcar todas las casillas",
     hint:"Toca dos veces para confirmar", armed:"¿Borrar<br>todo?", again:"Toca otra vez", cleared:"Casillas desmarcadas",
     theme:"Cambiar tema", themeAria:"Cambiar tema claro u oscuro",
+    soundOn:"Sonido: sí", soundOff:"Sonido: no",
     sectionReset:"Reiniciar", activity:"Actividad", completed:"Completado",
     synced:"Sincronizado con tu cuenta", saved:"Guardado en tu cuenta", localOnly:"Guardado solo en este navegador",
     sections:{
@@ -266,6 +271,7 @@ const I18N = {
     resetAria:"Reset: uncheck all boxes",
     hint:"Tap twice to confirm", armed:"Clear<br>all?", again:"Tap again", cleared:"All boxes cleared",
     theme:"Toggle theme", themeAria:"Toggle light or dark theme",
+    soundOn:"Sound: on", soundOff:"Sound: off",
     sectionReset:"Reset", activity:"Activity", completed:"Completed",
     synced:"Synced with your account", saved:"Saved to your account", localOnly:"Saved in this browser only",
     sections:{
@@ -409,7 +415,40 @@ function applyLang(){
     b.classList.toggle("on", on);
   });
   if (syncKey) syncEl.textContent = t[syncKey];
+  renderSoundBtn();
   build(); render();
+}
+
+/* ---- Sound effects (Kenney Interface Sounds, CC0) ---- */
+const SFX = {};
+["check","uncheck","complete","arm","reset","section-reset"].forEach(n => {
+  const a = new Audio(`sfx/${n}.mp3`); a.preload = "auto"; SFX[n] = a;
+});
+let soundOn = true;
+try { soundOn = localStorage.getItem("aion2-sound") !== "off"; } catch(e){}
+function play(name){
+  if (!soundOn || !SFX[name]) return;
+  const a = SFX[name].cloneNode(); a.volume = .45;
+  a.play().catch(()=>{});
+}
+const soundBtn = document.getElementById("sound");
+function renderSoundBtn(){
+  soundBtn.textContent = soundOn ? T().soundOn : T().soundOff;
+  soundBtn.setAttribute("aria-pressed", soundOn);
+}
+soundBtn.addEventListener("click", ()=>{
+  soundOn = !soundOn;
+  try { localStorage.setItem("aion2-sound", soundOn ? "on" : "off"); } catch(e){}
+  renderSoundBtn();
+  play("check");
+});
+/* True when the box just checked completes its section (or its alt column) */
+function completes(key){
+  const m = key.match(/^alts-\d+-(\d+)$/);
+  const group = m
+    ? allBoxes.filter(b => b.dataset.key.startsWith("alts-") && b.dataset.key.endsWith("-"+m[1]))
+    : allBoxes.filter(b => b.dataset.key.startsWith(key.split("-")[0]+"-"));
+  return group.every(b => b.checked);
 }
 document.querySelector(".langs").addEventListener("click", e=>{
   const b = e.target.closest("[data-lang]"); if (!b || b.dataset.lang === lang) return;
@@ -453,12 +492,14 @@ grid.addEventListener("change", e=>{
   const b = e.target.closest("input[data-key]"); if (!b) return;
   if (b.checked) state[b.dataset.key] = true; else delete state[b.dataset.key];
   render(); persist();
+  play(!b.checked ? "uncheck" : completes(b.dataset.key) ? "complete" : "check");
 });
 grid.addEventListener("click", e=>{
   const btn = e.target.closest("[data-reset]"); if (!btn) return;
   const id = btn.dataset.reset;
   Object.keys(state).forEach(k => { if (k.startsWith(id+"-")) delete state[k]; });
   render(); persist();
+  play("section-reset");
 });
 
 /* ---- Reset seal with two-tap confirmation ---- */
@@ -467,10 +508,12 @@ seal.addEventListener("click", ()=>{
   if (!seal.classList.contains("armed")){
     seal.classList.add("armed"); label.innerHTML = T().armed; hint.textContent = T().again;
     armTimer = setTimeout(disarm, 3000);
+    play("arm");
     return;
   }
   disarm();
   state = {}; render(); persist();
+  play("reset");
   seal.classList.remove("flash"); void seal.offsetWidth; seal.classList.add("flash");
   hint.textContent = T().cleared;
   setTimeout(()=>{ hint.textContent = T().hint; }, 2200);
