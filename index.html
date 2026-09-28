@@ -52,6 +52,10 @@ body{
 }
 .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
 
+/* Language switch */
+.langs{display:flex;justify-content:flex-end;gap:6px;margin-bottom:12px}
+.langs .mini.on{color:var(--gold);border-color:var(--gold)}
+
 /* Header */
 header{
   display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center;
@@ -167,13 +171,17 @@ footer{margin-top:28px;color:var(--muted);font-size:14px;display:flex;justify-co
 </head>
 <body>
 <div class="wrap">
+  <nav class="langs" aria-label="Idioma / Language">
+    <button class="mini" data-lang="es" lang="es">ES</button>
+    <button class="mini" data-lang="en" lang="en">EN</button>
+  </nav>
   <header>
     <div>
-      <h1>Registro del Daeva<small>Aion 2 · Main + 7 alts</small></h1>
-      <p class="sub">Marca lo que ya hiciste hoy y esta semana. Tus marcas se guardan solas; el sello las borra todas.</p>
+      <h1><span data-i18n="title">Registro del Daeva</span><small>Aion 2 · Main + 7 alts</small></h1>
+      <p class="sub" data-i18n="sub"></p>
     </div>
     <div class="seal-box">
-      <button class="seal" id="reset" aria-label="Reset: desmarcar todas las casillas">
+      <button class="seal" id="reset">
         <svg viewBox="0 0 148 148" aria-hidden="true">
           <g class="ring" fill="none" stroke="currentColor">
             <circle cx="74" cy="74" r="70" stroke-width="1" opacity=".6"/>
@@ -191,7 +199,7 @@ footer{margin-top:28px;color:var(--muted);font-size:14px;display:flex;justify-co
         </svg>
         <span class="core" id="resetLabel">Reset</span>
       </button>
-      <span class="seal-hint" id="resetHint">Toca dos veces para confirmar</span>
+      <span class="seal-hint" id="resetHint"></span>
     </div>
   </header>
 
@@ -199,47 +207,119 @@ footer{margin-top:28px;color:var(--muted);font-size:14px;display:flex;justify-co
 
   <footer>
     <span id="sync"></span>
-    <button class="mini" id="theme" aria-label="Cambiar tema claro u oscuro">Cambiar tema</button>
+    <button class="mini" id="theme" data-i18n="theme"></button>
   </footer>
 </div>
 
 <script>
+const I18N = {
+  es: {
+    docTitle:"Aion 2 · Registro del Daeva",
+    title:"Registro del Daeva",
+    sub:"Marca lo que ya hiciste hoy y esta semana. Tus marcas se guardan solas; el sello las borra todas.",
+    resetAria:"Reset: desmarcar todas las casillas",
+    hint:"Toca dos veces para confirmar", armed:"¿Borrar<br>todo?", again:"Toca otra vez", cleared:"Casillas desmarcadas",
+    theme:"Cambiar tema", themeAria:"Cambiar tema claro u oscuro",
+    sectionReset:"Reiniciar", activity:"Actividad", completed:"Completado",
+    synced:"Sincronizado con tu cuenta", saved:"Guardado en tu cuenta", localOnly:"Guardado solo en este navegador",
+    sections:{
+      diario:["Contenido diario", [
+        "5 Dutys (misiones diarias)",
+        "1 millón de Kina farmeable",
+        "Black Cloud Merchant (mercado negro)"
+      ]],
+      pve:["Semanal PvE", [
+        "Gastar la energía",
+        "Shugo · 14 entradas",
+        "Boss diario · 7 entradas",
+        "12 misiones de comando",
+        "14 Daily Dungeons",
+        "14 Nightmare",
+        "3 Ascension Trial",
+        "Misiones de temporada semanal"
+      ]],
+      pvp:["Semanal PvP", [
+        "20 misiones de comando en el Abyss",
+        "Corredores de 0-6 (ver cada 72 horas)",
+        "Farm de Abyss Points semanales",
+        "Participar 10 veces en arenas",
+        "30 victorias en arena",
+        "Participar 3 veces en 10 vs 10",
+        "3 victorias en modo 10 vs 10",
+        "Suministros por Abyss Points"
+      ]],
+      alts:["Contenido repetido con alts", [
+        "Gastar la energía",
+        "1 millón de Kina farmeable",
+        "3 Ascension Trial",
+        "14 Nightmare",
+        "Misiones de temporada semanal",
+        "Corredores de 0-6 (ver cada 72 horas)",
+        "Suministros por Abyss Points"
+      ]]
+    }
+  },
+  en: {
+    docTitle:"Aion 2 · Daeva Log",
+    title:"Daeva Log",
+    sub:"Check off what you've done today and this week. Your checks save automatically; the seal clears them all.",
+    resetAria:"Reset: uncheck all boxes",
+    hint:"Tap twice to confirm", armed:"Clear<br>all?", again:"Tap again", cleared:"All boxes cleared",
+    theme:"Toggle theme", themeAria:"Toggle light or dark theme",
+    sectionReset:"Reset", activity:"Activity", completed:"Completed",
+    synced:"Synced with your account", saved:"Saved to your account", localOnly:"Saved in this browser only",
+    sections:{
+      diario:["Daily content", [
+        "5 Duties (daily quests)",
+        "1 million farmable Kina",
+        "Black Cloud Merchant (black market)"
+      ]],
+      pve:["Weekly PvE", [
+        "Spend energy",
+        "Shugo · 14 entries",
+        "Daily boss · 7 entries",
+        "12 command missions",
+        "14 Daily Dungeons",
+        "14 Nightmare",
+        "3 Ascension Trial",
+        "Weekly season missions"
+      ]],
+      pvp:["Weekly PvP", [
+        "20 command missions in the Abyss",
+        "Corridors 0-6 (check every 72 hours)",
+        "Weekly Abyss Points farm",
+        "Join arenas 10 times",
+        "30 arena wins",
+        "Join 10 vs 10 three times",
+        "3 wins in 10 vs 10",
+        "Abyss Points supplies"
+      ]],
+      alts:["Repeated content on alts", [
+        "Spend energy",
+        "1 million farmable Kina",
+        "3 Ascension Trial",
+        "14 Nightmare",
+        "Weekly season missions",
+        "Corridors 0-6 (check every 72 hours)",
+        "Abyss Points supplies"
+      ]]
+    }
+  }
+};
+
 const SECTIONS = [
-  { id:"diario", title:"Contenido diario", accent:"var(--gold)", items:[
-    "5 Dutys (misiones diarias)",
-    "1 millón de Kina farmeable",
-    "Black Cloud Merchant (mercado negro)"
-  ]},
-  { id:"pve", title:"Semanal PvE", accent:"var(--elyos)", items:[
-    "Gastar la energía",
-    "Shugo · 14 entradas",
-    "Boss diario · 7 entradas",
-    "12 misiones de comando",
-    "14 Daily Dungeons",
-    "14 Nightmare",
-    "3 Ascension Trial",
-    "Misiones de temporada semanal"
-  ]},
-  { id:"pvp", title:"Semanal PvP", accent:"var(--asmo)", items:[
-    "20 misiones de comando en el Abyss",
-    "Corredores de 0-6 (ver cada 72 horas)",
-    "Farm de Abyss Points semanales",
-    "Participar 10 veces en arenas",
-    "30 victorias en arena",
-    "Participar 3 veces en 10 vs 10",
-    "3 victorias en modo 10 vs 10",
-    "Suministros por Abyss Points"
-  ]}
+  { id:"diario", accent:"var(--gold)" },
+  { id:"pve", accent:"var(--elyos)" },
+  { id:"pvp", accent:"var(--asmo)" }
 ];
-const ALTS = { id:"alts", title:"Contenido repetido con alts", accent:"var(--alts)", cols:7, items:[
-  "Gastar la energía",
-  "1 millón de Kina farmeable",
-  "3 Ascension Trial",
-  "14 Nightmare",
-  "Misiones de temporada semanal",
-  "Corredores de 0-6 (ver cada 72 horas)",
-  "Suministros por Abyss Points"
-]};
+const ALTS = { id:"alts", accent:"var(--alts)", cols:7 };
+
+let lang = "es";
+try { lang = localStorage.getItem("aion2-lang") || ((navigator.language||"").toLowerCase().startsWith("es") ? "es" : "en"); } catch(e){}
+if (!I18N[lang]) lang = "es";
+const T = () => I18N[lang];
+const secTitle = id => T().sections[id][0];
+const secItems = id => T().sections[id][1];
 
 const LS_KEY = "aion2-checklist-v1";
 let state = {};
@@ -252,42 +332,45 @@ function box(key, label){
   return `<input type="checkbox" data-key="${key}" id="${key}" aria-label="${esc(label)}"><span class="box" aria-hidden="true"></span>`;
 }
 function head(s, total){
-  return `<div class="card-head"><h2>${s.title}</h2>
+  return `<div class="card-head"><h2>${esc(secTitle(s.id))}</h2>
     <span class="meta"><span><span class="count" data-count="${s.id}">0</span> / ${total}</span>
-    <button class="mini" data-reset="${s.id}">Reiniciar</button></span></div>
+    <button class="mini" data-reset="${s.id}">${T().sectionReset}</button></span></div>
     <div class="bar"><i data-bar="${s.id}"></i></div>`;
 }
 
-let html = "";
-for (const s of SECTIONS){
-  html += `<section class="card" style="--accent:${s.accent}" data-sec="${s.id}">${head(s, s.items.length)}<ul>`;
-  s.items.forEach((it,i)=>{
-    const k = `${s.id}-${i}`;
-    html += `<li><label>${box(k,it)}<span class="txt">${esc(it)}</span></label></li>`;
-  });
-  html += `</ul></section>`;
+let allBoxes = [];
+function build(){
+  let html = "";
+  for (const s of SECTIONS){
+    const items = secItems(s.id);
+    html += `<section class="card" style="--accent:${s.accent}" data-sec="${s.id}">${head(s, items.length)}<ul>`;
+    items.forEach((it,i)=>{
+      const k = `${s.id}-${i}`;
+      html += `<li><label>${box(k,it)}<span class="txt">${esc(it)}</span></label></li>`;
+    });
+    html += `</ul></section>`;
+  }
+  {
+    const s = ALTS, items = secItems(s.id);
+    html += `<section class="card wide" style="--accent:${s.accent}" data-sec="${s.id}">${head(s, items.length*s.cols)}
+      <div class="scroll"><table><thead><tr><th scope="col">${T().activity}</th>`;
+    for (let c=1;c<=s.cols;c++) html += `<th scope="col" data-colhead="${c}">Alt ${c}</th>`;
+    html += `</tr></thead><tbody>`;
+    items.forEach((it,i)=>{
+      html += `<tr><td>${esc(it)}</td>`;
+      for (let c=1;c<=s.cols;c++){
+        const k = `alts-${i}-${c}`;
+        html += `<td><label>${box(k, it+" · Alt "+c)}</label></td>`;
+      }
+      html += `</tr>`;
+    });
+    html += `</tbody><tfoot><tr><td>${T().completed}</td>`;
+    for (let c=1;c<=s.cols;c++) html += `<td data-colcount="${c}">0/${items.length}</td>`;
+    html += `</tr></tfoot></table></div></section>`;
+  }
+  grid.innerHTML = html;
+  allBoxes = [...document.querySelectorAll("input[data-key]")];
 }
-{
-  const s = ALTS;
-  html += `<section class="card wide" style="--accent:${s.accent}" data-sec="${s.id}">${head(s, s.items.length*s.cols)}
-    <div class="scroll"><table><thead><tr><th scope="col">Actividad</th>`;
-  for (let c=1;c<=s.cols;c++) html += `<th scope="col" data-colhead="${c}">Alt ${c}</th>`;
-  html += `</tr></thead><tbody>`;
-  s.items.forEach((it,i)=>{
-    html += `<tr><td>${esc(it)}</td>`;
-    for (let c=1;c<=s.cols;c++){
-      const k = `alts-${i}-${c}`;
-      html += `<td><label>${box(k, it+" · Alt "+c)}</label></td>`;
-    }
-    html += `</tr>`;
-  });
-  html += `</tbody><tfoot><tr><td>Completado</td>`;
-  for (let c=1;c<=s.cols;c++) html += `<td data-colcount="${c}">0/${s.items.length}</td>`;
-  html += `</tr></tfoot></table></div></section>`;
-}
-grid.innerHTML = html;
-
-const allBoxes = [...document.querySelectorAll("input[data-key]")];
 
 function render(){
   allBoxes.forEach(b => b.checked = !!state[b.dataset.key]);
@@ -298,24 +381,53 @@ function render(){
     document.querySelector(`[data-count="${s.id}"]`).textContent = n;
     document.querySelector(`[data-bar="${s.id}"]`).style.width = (boxes.length ? n/boxes.length*100 : 0)+"%";
   }
+  const altN = secItems(ALTS.id).length;
   for (let c=1;c<=ALTS.cols;c++){
-    let n=0; for (let i=0;i<ALTS.items.length;i++) if (state[`alts-${i}-${c}`]) n++;
-    document.querySelector(`[data-colcount="${c}"]`).textContent = `${n}/${ALTS.items.length}`;
-    document.querySelector(`[data-colhead="${c}"]`).classList.toggle("done", n===ALTS.items.length);
+    let n=0; for (let i=0;i<altN;i++) if (state[`alts-${i}-${c}`]) n++;
+    document.querySelector(`[data-colcount="${c}"]`).textContent = `${n}/${altN}`;
+    document.querySelector(`[data-colhead="${c}"]`).classList.toggle("done", n===altN);
   }
 }
 
+const syncEl = document.getElementById("sync");
+const seal = document.getElementById("reset"), label = document.getElementById("resetLabel"), hint = document.getElementById("resetHint");
+
+/* ---- Language ---- */
+let syncKey = "";
+function setSync(k){ syncKey = k; syncEl.textContent = T()[k]; }
+function applyLang(){
+  const t = T();
+  document.documentElement.lang = lang;
+  document.title = t.docTitle;
+  document.querySelectorAll("[data-i18n]").forEach(el => el.textContent = t[el.dataset.i18n]);
+  document.getElementById("theme").setAttribute("aria-label", t.themeAria);
+  seal.setAttribute("aria-label", t.resetAria);
+  hint.textContent = t.hint;
+  document.querySelectorAll("[data-lang]").forEach(b => {
+    const on = b.dataset.lang === lang;
+    b.setAttribute("aria-pressed", on);
+    b.classList.toggle("on", on);
+  });
+  if (syncKey) syncEl.textContent = t[syncKey];
+  build(); render();
+}
+document.querySelector(".langs").addEventListener("click", e=>{
+  const b = e.target.closest("[data-lang]"); if (!b || b.dataset.lang === lang) return;
+  lang = b.dataset.lang;
+  try { localStorage.setItem("aion2-lang", lang); } catch(e){}
+  disarm(); applyLang();
+});
+
 /* ---- Persistence: localStorage now, cloud sync if available ---- */
 let dbDoc = null, saveTimer = null;
-const syncEl = document.getElementById("sync");
 
 function persist(){
   try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e){}
   if (dbDoc){
     clearTimeout(saveTimer);
     saveTimer = setTimeout(async ()=>{
-      try { await dbDoc.set({checks: state, updated: Date.now()}); syncEl.textContent = "Guardado en tu cuenta"; }
-      catch(e){ syncEl.textContent = "Guardado solo en este navegador"; }
+      try { await dbDoc.set({checks: state, updated: Date.now()}); setSync("saved"); }
+      catch(e){ setSync("localOnly"); }
     }, 600);
   }
 }
@@ -333,7 +445,7 @@ function persist(){
       const d = snap.data();
       if (d && d.checks && typeof d.checks === "object"){ state = {...d.checks}; render(); try{localStorage.setItem(LS_KEY, JSON.stringify(state));}catch(e){} }
     }
-    syncEl.textContent = "Sincronizado con tu cuenta";
+    setSync("synced");
   }catch(e){ dbDoc = null; }
 })();
 
@@ -350,21 +462,20 @@ grid.addEventListener("click", e=>{
 });
 
 /* ---- Reset seal with two-tap confirmation ---- */
-const seal = document.getElementById("reset"), label = document.getElementById("resetLabel"), hint = document.getElementById("resetHint");
 let armTimer = null;
 seal.addEventListener("click", ()=>{
   if (!seal.classList.contains("armed")){
-    seal.classList.add("armed"); label.innerHTML = "¿Borrar<br>todo?"; hint.textContent = "Toca otra vez";
+    seal.classList.add("armed"); label.innerHTML = T().armed; hint.textContent = T().again;
     armTimer = setTimeout(disarm, 3000);
     return;
   }
-  clearTimeout(armTimer); disarm();
+  disarm();
   state = {}; render(); persist();
   seal.classList.remove("flash"); void seal.offsetWidth; seal.classList.add("flash");
-  hint.textContent = "Casillas desmarcadas";
-  setTimeout(()=>{ hint.textContent = "Toca dos veces para confirmar"; }, 2200);
+  hint.textContent = T().cleared;
+  setTimeout(()=>{ hint.textContent = T().hint; }, 2200);
 });
-function disarm(){ seal.classList.remove("armed"); label.textContent = "Reset"; if (hint.textContent==="Toca otra vez") hint.textContent = "Toca dos veces para confirmar"; }
+function disarm(){ clearTimeout(armTimer); seal.classList.remove("armed"); label.textContent = "Reset"; hint.textContent = T().hint; }
 
 /* ---- Theme toggle ---- */
 const root = document.documentElement;
@@ -375,7 +486,7 @@ document.getElementById("theme").addEventListener("click", ()=>{
   try { localStorage.setItem("aion2-theme", root.dataset.theme); } catch(e){}
 });
 
-render();
+applyLang();
 </script>
 </body>
 </html>
